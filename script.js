@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const modal = document.getElementById('apiKeyModal');
   const apiKeyInput = document.getElementById('apiKeyInput');
   const saveApiKeyBtn = document.getElementById('saveApiKey');
+  // Lese den API‑Key aus dem lokalen Speicher. Dieser Wert wird sowohl
+  // vom Eingabe‑Bar am Seitenende als auch vom Modaldialog verwendet.
   let apiKey = localStorage.getItem('openai_api_key');
 
   function showApiKeyModal() {
@@ -15,15 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function hideApiKeyModal() {
     modal.style.display = 'none';
   }
-  if (!apiKey) {
-    showApiKeyModal();
-  }
+  // Zeige das Modal nicht automatisch, wenn kein Schlüssel vorhanden ist.
+  // Stattdessen kann der Nutzer den Schlüssel im unteren Eingabebereich
+  // eintragen. Das Modal bleibt über Ctrl+K erreichbar.
   saveApiKeyBtn.addEventListener('click', () => {
     const key = apiKeyInput.value.trim();
     if (key) {
       localStorage.setItem('openai_api_key', key);
       apiKey = key;
       hideApiKeyModal();
+      // Synchronisiere auch das Passwortfeld im API‑Key‑Bar
+      const barInput = document.getElementById('apiKeyBarInput');
+      if (barInput) barInput.value = key;
     }
   });
 
@@ -61,8 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!prompt) return;
     promptInput.value = '';
     if (!apiKey) {
-      showApiKeyModal();
-      showResult('Kein API‑Schlüssel gefunden. Bitte gib deinen Schlüssel ein.');
+      showResult('Kein API‑Schlüssel gefunden. Bitte gib deinen Schlüssel unten ein.');
       return;
     }
     if (warnIfFileProtocol()) return;
@@ -140,4 +144,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Eingabefeld aktivieren, damit der Benutzer direkt loslegen kann.
   promptInput.focus();
+
+  // *** API‑Key‑Bar Funktionslogik ***
+  const bar = document.getElementById('apiKeyBar');
+  const barInput = document.getElementById('apiKeyBarInput');
+  const barSaveBtn = document.getElementById('saveApiKeyBar');
+  // Bei bestehendem Schlüssel im Speicher fülle das Passwortfeld vor
+  // und verstecke den unteren Eingabebereich, da kein weiterer Schlüssel
+  // nötig ist. Der API‑Key kann weiterhin über Ctrl+K geändert werden.
+  if (apiKey && barInput) {
+    barInput.value = apiKey;
+    if (bar) {
+      bar.style.display = 'none';
+    }
+  }
+  function saveKeyFromBar() {
+    const key = barInput.value.trim();
+    if (key) {
+      localStorage.setItem('openai_api_key', key);
+      apiKey = key;
+      // Synchronisiere auch das Modal‑Feld
+      const modalInput = document.getElementById('apiKeyInput');
+      if (modalInput) modalInput.value = key;
+      // Blende den API‑Key‑Bar aus, nachdem der Schlüssel gespeichert wurde
+      if (bar) {
+        bar.style.display = 'none';
+      }
+    }
+  }
+  if (barSaveBtn) {
+    barSaveBtn.addEventListener('click', () => {
+      saveKeyFromBar();
+    });
+  }
+  if (barInput) {
+    barInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveKeyFromBar();
+      }
+    });
+  }
 });

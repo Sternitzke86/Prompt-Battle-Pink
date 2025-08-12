@@ -3,20 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompt‑Battle – Pink</title>
+  <title>Prompt‑Battle – Gelb</title>
   <!--
-    Variante in Pink. Diese Datei ist im Wesentlichen identisch mit der gelben
-    Version, verwendet jedoch eine andere Hintergrundfarbe. Große Schrift und
-    schwarzer Rand orientieren sich am hochgeladenen Foto des Nutzers.
+    Single‑User‑Version der Prompt‑Battle‑Oberfläche.
+    Diese Variante ist für Präsentationen gedacht: Großformatiger Text auf einem
+    knalligen Hintergrund sorgt dafür, dass auch Zuschauerinnen und Zuschauer
+    aus einiger Entfernung mitlesen können. Ein API‑Schlüssel wird lokal im
+    Browser gespeichert. Für den Schriftgrad orientieren wir uns an
+    Webstandards: Ohne Angabe beträgt die Standardschriftgröße 16 px【742899299561717†L765-L790】.
+    Hier erhöhen wir sie deutlich. Die Farbwerte sind in der verlinkten
+    CSS‑Datei hinterlegt.
   -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+<div class="scroll-container">
   <!--
-    API‑Schlüssel‑Dialog: Beim ersten Start oder über Ctrl+K kann der
-    persönliche OpenAI‑API‑Schlüssel eingegeben werden. Der Schlüssel
-    wird nur im lokalen Speicher des Browsers gespeichert. Ohne gültigen
-    Schlüssel können keine Bilder generiert werden.
+    API‑Schlüssel‑Dialog: Beim ersten Start oder über die Tastenkombination
+    Ctrl+K kann der Benutzer hier seinen persönlichen OpenAI‑API‑Schlüssel
+    eingeben. Der Schlüssel wird ausschließlich im lokalen Speicher des
+    Browsers gespeichert. Ohne gültigen Schlüssel können keine Bilder
+    generiert werden.
   -->
   <div id="apiKeyModal" class="modal">
     <div class="modal-content">
@@ -32,14 +39,16 @@
     </div>
   </div>
   <!--
-       Hauptbereich mit Logo und Eingabefeld: Das Logo des Digitalen
-       Innovationszentrums wird oben links angezeigt. Darunter befindet sich
-       das großflächige Eingabefeld. Der gesamte Container erstreckt sich
-       über die volle Höhe des Bildschirms. Durch Drücken der Enter‑Taste
-       wird der Prompt abgeschickt.
+    Hauptbereich: Das Logo des Digitalen Innovationszentrums wird oben links
+    angezeigt. Direkt darunter beginnt das große Eingabefeld für den Prompt.
+    Der gesamte Container nimmt die volle Höhe des Viewports ein, damit das
+    Textfeld den verfügbaren Platz nach dem Logo ausfüllt.
   -->
   <div class="main-container">
-    <img id="logo" src="logo.png" alt="Logo des Digitalen Innovationszentrums" />
+    <div class="logo-bar">
+  <img src="logo.png" alt="Digitales MV Logo" class="logo">
+  <img src="images/SMS_black.png" alt="SMS Logo" class="logo">
+</div>
     <!-- Eingabefeld für den neuen Prompt. Es steht direkt unter dem Logo,
          sodass es sofort ins Auge fällt. Durch Drücken der Enter‑Taste wird
          der Inhalt an die API gesendet. -->
@@ -48,17 +57,16 @@
          generierten Bilder in chronologischer Reihenfolge angezeigt. -->
     <div id="messages" class="messages"></div>
   </div>
-  <!-- Ergebnis‑Overlay: Hier werden generierte Bilder oder Fehlermeldungen
-       angezeigt. Das Overlay erscheint temporär über dem Eingabebereich. -->
+  <!-- Ergebnis‑Overlay für Bilder oder Fehlermeldungen -->
   <div id="resultModal" class="result-modal">
     <div class="result-content" id="resultContent"></div>
   </div>
 
   <!--
-    Unterer Bereich zur Eingabe des API‑Schlüssels. Dieser Bereich ist
-    jederzeit sichtbar und erlaubt das Speichern eines neuen Schlüssels.
-    Sobald ein Schlüssel vorhanden ist, wird er im Passwortfeld vorausgefüllt.
-    Durch Drücken von Enter oder den Button „Speichern“ wird der Schlüssel im
+    Unterer Bereich zur Eingabe des API‑Schlüssels. Dieser Bereich ist stets
+    sichtbar und erlaubt das Speichern eines neuen Schlüssels. Sobald ein
+    Schlüssel vorhanden ist, wird er als Passwortfeld vorausgefüllt. Durch
+    Drücken der Enter‑Taste oder den Speichern‑Button wird der Schlüssel im
     lokalen Speicher abgelegt.
   -->
   <div id="apiKeyBar">
@@ -66,5 +74,6 @@
     <button id="saveApiKeyBar">Speichern</button>
   </div>
   <script src="script.js"></script>
+</div>
 </body>
 </html>

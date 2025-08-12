@@ -1,46 +1,43 @@
 /*
-  Großformatiges, kontrastreiches Design in leuchtendem Gelb. Das Layout
-  orientiert sich an dem vom Nutzer bereitgestellten Foto: ein farbiges
-  Display mit schwarzem Rand und sehr großer Schrift. Für das Layout
-  verwenden wir CSS‑Variablen, sodass die Farbe leicht geändert werden kann.
+  Pinke Farbvariante der Single‑User‑Prompt‑Battle‑Oberfläche.
+  Wie in der gelben Version orientieren wir uns an dem übermittelten Foto:
+  schwarze Ränder und sehr große Schrift für gute Lesbarkeit aus der Distanz.
 */
 
 :root {
-  --bg-color: #ffff3b; /* helles, knalliges Gelb */
-  --text-color: #000; /* Schwarz für optimale Lesbarkeit */
+  --bg-color: #ff2da0; /* knalliges Pink */
+  --text-color: #000;
   /* Farbe des Overlays beim Vergrößern von Bildern: leicht transparente
-     Variante des Hintergrunds */
-  --modal-overlay-bg: rgba(255, 255, 59, 0.9);
+     Variante des pinken Hintergrunds */
+  --modal-overlay-bg: rgba(255, 45, 160, 0.9);
 }
 
 body {
   margin: 0;
   padding: 0;
-  /* Der gesamte Hintergrund verwendet die definierte Hintergrundfarbe und füllt
-     den kompletten Bildschirm aus. */
+  /* Füllt den gesamten Bildschirm mit der pinken Farbe aus */
   background: var(--bg-color);
   color: var(--text-color);
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
 
-/* Container für Logo und Eingabefeld. Nutzt die gesamte Höhe des Bildschirms
-   und ordnet die Elemente vertikal an. */
-/*
-  Der Hauptcontainer ordnet Logo, Nachrichtenbereich und Eingabefeld
-  vertikal an. Die Höhe wird durch die Höhe des API‑Key‑Bars reduziert,
-  sodass dieser nicht den Inhalt überlagert. */
+/* Container für Logo und Eingabefeld – füllt die gesamte Höhe des
+   Viewports und richtet die Elemente vertikal aus */
 .main-container {
   display: flex;
   flex-direction: column;
+  /* Reduziere die Höhe um die Höhe des API‑Key‑Bars. Der Bar ist fest
+     am unteren Rand positioniert und benötigt Platz, damit das Eingabefeld
+     nicht verdeckt wird. 5rem sind ausreichend für Eingabefeld und Button. */
   height: calc(100vh - 5rem);
   width: 100%;
   box-sizing: border-box;
   padding: 1rem;
 }
 
-/* Logo oben links. Die Größe ist relativ, damit es auf unterschiedlichen
-   Bildschirmgrößen ansehnlich bleibt. */
+/* Logo oben links mit relativer Größe. Auf diese Weise bleibt es auf
+   unterschiedlichen Bildschirmen gut proportioniert. */
 #logo {
   max-width: 30%;
   height: auto;
@@ -51,6 +48,9 @@ body {
   margin-bottom: 1rem;
   color: #fff;
   font-size: 3rem;
+  /* Zentriert sowohl die Überschrift „Prompt‑Battle:“ als auch den nachfolgenden
+     Text in der nächsten Zeile. Damit steht die erste Zeile mittig über
+     „Kann KI Kunst?“, wie vom Nutzer gewünscht. */
   text-align: center;
 }
 
@@ -169,7 +169,7 @@ footer {
   opacity: 0.8;
 }
 
-/* Modal Styling (reuse from previous design) */
+/* Modal Styling – gleiche wie in Gelbversion */
 .modal {
   display: none;
   position: fixed;
@@ -212,11 +212,10 @@ footer {
 }
 
 /*
-  Vollbild‑Eingabefeld: Das Textfeld füllt die gesamte Seite aus und wirkt
-  nicht wie ein klassisches Eingabefeld. Es hat keine Rahmen, keine
-  Schatten und nutzt dieselbe Hintergrundfarbe wie der restliche Bildschirm.
-  Der Text ist extrem groß, damit Zuschauerinnen und Zuschauer auch aus
-  größerer Entfernung mitlesen können.
+  Vollbild‑Promptfeld: Das Textfeld nimmt den kompletten Bildschirm ein. Es
+  verhält sich nicht wie ein typisches Eingabefeld – keine sichtbaren
+  Rahmen oder Platzhalter, gleiche Hintergrundfarbe wie der Rest der Seite
+  und sehr große Schrift.
 */
 .full-input {
   width: 100%;
@@ -237,8 +236,7 @@ footer {
   font-family: inherit;
 }
 
-/* Modal für Ergebnisanzeige. Wird nur angezeigt, wenn ein Bild oder eine
-   Fehlermeldung vorliegt. */
+/* Overlay für Bild‑ oder Fehlermeldungen */
 .result-modal {
   display: none;
   position: fixed;
@@ -257,7 +255,6 @@ footer {
   max-width: 95%;
   max-height: 95%;
   overflow: auto;
-  /* Zentriert den Inhalt (Bild oder Text) innerhalb des Overlays */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -270,9 +267,7 @@ footer {
   border-radius: 12px;
 }
 
-/* Nachrichtenliste: Dieser Bereich sammelt alle abgeschickten Prompts und
-   die dazugehörigen generierten Bilder. Er wächst dynamisch und ist
-   scrollbar, falls der Inhalt den verfügbaren Platz übersteigt. */
+/* Nachrichtenliste: sammelt abgeschickte Prompts und generierte Bilder. */
 .messages {
   flex: 1;
   overflow-y: auto;
@@ -283,7 +278,7 @@ footer {
   color: var(--text-color);
 }
 
-/* Einzelne Nachricht: Ein Abstand nach unten trennt die Nachrichten. */
+/* Einzelne Nachricht mit Abstand unten. */
 .message {
   margin-bottom: 1rem;
 }
@@ -294,8 +289,8 @@ footer {
   white-space: pre-wrap;
 }
 
-/* Bilder innerhalb der Nachrichten: nehmen die verfügbare Breite ein und
-   besitzen abgerundete Ecken. Durch Klick lassen sie sich vergrößern. */
+/* Bilder in Nachrichten: nehmen die volle Breite ein, abgerundete Ecken
+   und können per Klick vergrößert werden. */
 .message img {
   max-width: 100%;
   height: auto;
@@ -308,7 +303,8 @@ footer {
   Passwortfeld zur Eingabe des OpenAI‑Schlüssels und einen Speichern‑Button.
   Der Hintergrund ist halbtransparent, damit er sich vom restlichen
   Farbschema absetzt, ohne zu stark abzulenken. Die Farben orientieren sich
-  am gewählten Farbschema (Gelb für Hintergrund, Schwarz für Text). */
+  am pinken Farbschema (Hintergrundfarbe für Button, schwarzer Text für
+  Lesbarkeit). */
 #apiKeyBar {
   position: fixed;
   bottom: 0;

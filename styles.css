@@ -1,40 +1,46 @@
 /*
-  Pinke Farbvariante der Single‑User‑Prompt‑Battle‑Oberfläche.
-  Wie in der gelben Version orientieren wir uns an dem übermittelten Foto:
-  schwarze Ränder und sehr große Schrift für gute Lesbarkeit aus der Distanz.
+  Großformatiges, kontrastreiches Design in leuchtendem Gelb. Das Layout
+  orientiert sich an dem vom Nutzer bereitgestellten Foto: ein farbiges
+  Display mit schwarzem Rand und sehr großer Schrift. Für das Layout
+  verwenden wir CSS‑Variablen, sodass die Farbe leicht geändert werden kann.
 */
 
 :root {
-  --bg-color: #ff2da0; /* knalliges Pink */
-  --text-color: #000;
+  --bg-color: #ffff3b; /* helles, knalliges Gelb */
+  --text-color: #000; /* Schwarz für optimale Lesbarkeit */
+  /* Farbe des Overlays beim Vergrößern von Bildern: leicht transparente
+     Variante des Hintergrunds */
+  --modal-overlay-bg: rgba(255, 255, 59, 0.9);
 }
 
 body {
   margin: 0;
   padding: 0;
-  /* Füllt den gesamten Bildschirm mit der pinken Farbe aus */
+  /* Der gesamte Hintergrund verwendet die definierte Hintergrundfarbe und füllt
+     den kompletten Bildschirm aus. */
   background: var(--bg-color);
   color: var(--text-color);
   font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
 
-/* Container für Logo und Eingabefeld – füllt die gesamte Höhe des
-   Viewports und richtet die Elemente vertikal aus */
+/* Container für Logo und Eingabefeld. Nutzt die gesamte Höhe des Bildschirms
+   und ordnet die Elemente vertikal an. */
+/*
+  Der Hauptcontainer ordnet Logo, Nachrichtenbereich und Eingabefeld
+  vertikal an. Die Höhe wird durch die Höhe des API‑Key‑Bars reduziert,
+  sodass dieser nicht den Inhalt überlagert. */
 .main-container {
   display: flex;
   flex-direction: column;
-  /* Reduziere die Höhe um die Höhe des API‑Key‑Bars. Der Bar ist fest
-     am unteren Rand positioniert und benötigt Platz, damit das Eingabefeld
-     nicht verdeckt wird. 5rem sind ausreichend für Eingabefeld und Button. */
   height: calc(100vh - 5rem);
   width: 100%;
   box-sizing: border-box;
   padding: 1rem;
 }
 
-/* Logo oben links mit relativer Größe. Auf diese Weise bleibt es auf
-   unterschiedlichen Bildschirmen gut proportioniert. */
+/* Logo oben links. Die Größe ist relativ, damit es auf unterschiedlichen
+   Bildschirmgrößen ansehnlich bleibt. */
 #logo {
   max-width: 30%;
   height: auto;
@@ -45,9 +51,6 @@ body {
   margin-bottom: 1rem;
   color: #fff;
   font-size: 3rem;
-  /* Zentriert sowohl die Überschrift „Prompt‑Battle:“ als auch den nachfolgenden
-     Text in der nächsten Zeile. Damit steht die erste Zeile mittig über
-     „Kann KI Kunst?“, wie vom Nutzer gewünscht. */
   text-align: center;
 }
 
@@ -166,7 +169,7 @@ footer {
   opacity: 0.8;
 }
 
-/* Modal Styling – gleiche wie in Gelbversion */
+/* Modal Styling (reuse from previous design) */
 .modal {
   display: none;
   position: fixed;
@@ -209,21 +212,23 @@ footer {
 }
 
 /*
-  Vollbild‑Promptfeld: Das Textfeld nimmt den kompletten Bildschirm ein. Es
-  verhält sich nicht wie ein typisches Eingabefeld – keine sichtbaren
-  Rahmen oder Platzhalter, gleiche Hintergrundfarbe wie der Rest der Seite
-  und sehr große Schrift.
+  Vollbild‑Eingabefeld: Das Textfeld füllt die gesamte Seite aus und wirkt
+  nicht wie ein klassisches Eingabefeld. Es hat keine Rahmen, keine
+  Schatten und nutzt dieselbe Hintergrundfarbe wie der restliche Bildschirm.
+  Der Text ist extrem groß, damit Zuschauerinnen und Zuschauer auch aus
+  größerer Entfernung mitlesen können.
 */
 .full-input {
   width: 100%;
-  /* Nutzt den verbleibenden Raum unter dem Logo */
-  flex: 1;
+  /* Eingabefeld steht am unteren Rand der Nachrichtenliste und hat eine
+     feste Höhe. Die Schrift ist sehr groß, damit der Text gut lesbar ist. */
+  flex: none;
+  min-height: 6rem;
   padding: 0.5rem;
   box-sizing: border-box;
   border: none;
   outline: none;
   resize: none;
-  /* Schriftgröße nochmals um ein Drittel reduziert (von 8rem auf ca. 5.3rem) */
   font-size: 5.3rem;
   line-height: 1.2;
   background: var(--bg-color);
@@ -232,7 +237,8 @@ footer {
   font-family: inherit;
 }
 
-/* Overlay für Bild‑ oder Fehlermeldungen */
+/* Modal für Ergebnisanzeige. Wird nur angezeigt, wenn ein Bild oder eine
+   Fehlermeldung vorliegt. */
 .result-modal {
   display: none;
   position: fixed;
@@ -241,7 +247,8 @@ footer {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
+  /* Nutzt die farbige Overlay‑Variable statt schwarzem Hintergrund */
+  background-color: var(--modal-overlay-bg);
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -250,6 +257,7 @@ footer {
   max-width: 95%;
   max-height: 95%;
   overflow: auto;
+  /* Zentriert den Inhalt (Bild oder Text) innerhalb des Overlays */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -262,13 +270,45 @@ footer {
   border-radius: 12px;
 }
 
+/* Nachrichtenliste: Dieser Bereich sammelt alle abgeschickten Prompts und
+   die dazugehörigen generierten Bilder. Er wächst dynamisch und ist
+   scrollbar, falls der Inhalt den verfügbaren Platz übersteigt. */
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  font-size: 4rem;
+  line-height: 1.3;
+  color: var(--text-color);
+}
+
+/* Einzelne Nachricht: Ein Abstand nach unten trennt die Nachrichten. */
+.message {
+  margin-bottom: 1rem;
+}
+
+/* Prompt‑Text innerhalb einer Nachricht. */
+.message .prompt-text {
+  margin: 0 0 0.5rem 0;
+  white-space: pre-wrap;
+}
+
+/* Bilder innerhalb der Nachrichten: nehmen die verfügbare Breite ein und
+   besitzen abgerundete Ecken. Durch Klick lassen sie sich vergrößern. */
+.message img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
 /*
   Der API‑Key‑Bar wird am unteren Bildschirmrand fixiert. Er enthält ein
   Passwortfeld zur Eingabe des OpenAI‑Schlüssels und einen Speichern‑Button.
   Der Hintergrund ist halbtransparent, damit er sich vom restlichen
   Farbschema absetzt, ohne zu stark abzulenken. Die Farben orientieren sich
-  am pinken Farbschema (Hintergrundfarbe für Button, schwarzer Text für
-  Lesbarkeit). */
+  am gewählten Farbschema (Gelb für Hintergrund, Schwarz für Text). */
 #apiKeyBar {
   position: fixed;
   bottom: 0;
